@@ -2358,3 +2358,23 @@ button {
     height: 78px;
   }
 }
+
+/* 在 style.css 中添加 */
+.card, .showcase__item, .entry__item {
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before, .showcase__item::before, .entry__item::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(120, 160, 255, 0.15) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.card:hover::before, .showcase__item:hover::before, .entry__item:hover::before {
+  opacity: 1;
+}
