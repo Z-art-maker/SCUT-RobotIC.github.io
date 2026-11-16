@@ -126,3 +126,55 @@
     el.textContent = String(new Date().getFullYear());
   });
 })();
+
+// 在 main.js 中添加
+document.querySelectorAll('.card, .showcase__item').forEach(card => {
+  let rafId = null;
+  const updateTilt = (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
+    const rotateX = ((y - centerY) / centerY) * -10; // 最大倾斜10度
+    const rotateY = ((x - centerX) / centerX) * 10;
+
+    card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+    card.style.transition = 'transform 0.1s ease-out'; // 平滑跟随
+  };
+
+  card.addEventListener('mousemove', (e) => {
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(() => updateTilt(e));
+  });
+
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+    card.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)'; // 平滑复位
+  });
+});
+
+// 在 main.js 中添加
+const heroSection = document.querySelector('.hero');
+const heroImage = document.querySelector('.hero__media img'); // 假设图片选择器
+
+if (heroSection && heroImage) {
+  heroSection.addEventListener('mousemove', (e) => {
+    const { clientX, clientY } = e;
+    const { innerWidth, innerHeight } = window;
+    // 计算鼠标相对于屏幕中心的位置，范围 -0.5 到 0.5
+    const x = (clientX / innerWidth) - 0.5;
+    const y = (clientY / innerHeight) - 0.5;
+
+    // 图片3D倾斜
+    heroImage.style.transform = `perspective(1200px) rotateX(${y * 6}deg) rotateY(${x * -6}deg) scale(1.05)`;
+
+    // 如果想让标题也有聚光灯效果，可以在这里更新CSS变量
+    heroSection.style.setProperty('--spotlight-x', `${clientX}px`);
+    heroSection.style.setProperty('--spotlight-y', `${clientY}px`);
+  });
+
+  heroSection.addEventListener('mouseleave', () => {
+    heroImage.style.transform = 'perspective(1200px) rotateX(0) rotateY(0) scale(1)';
+  });
+}
