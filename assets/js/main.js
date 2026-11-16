@@ -126,3 +126,14 @@
     el.textContent = String(new Date().getFullYear());
   });
 })();
+
+// 在 main.js 中添加
+document.querySelectorAll('.card, .showcase__item, .entry__item').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    card.style.setProperty('--mouse-x', `${x}px`);
+    card.style.setProperty('--mouse-y', `${y}px`);
+  });
+});
